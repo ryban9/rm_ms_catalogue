@@ -112,7 +112,10 @@ public class ProductoService {
 
         long total = imagenes.countByProducto_Id(productoId);
         if (total >= 5) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "El producto ya tiene el máximo de 5 imágenes.");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "El producto ya alcanzó el máximo de 5 imágenes."
+            );
         }
 
         String extension = switch (mime.toLowerCase(Locale.ROOT)) {
@@ -139,6 +142,33 @@ public class ProductoService {
 
         ProductoImagen guardada = imagenes.save(imagen);
         return ProductoImagenResponse.from(guardada, supabaseUrl);
+    }
+
+    public void eliminarImagen(UUID productoId, UUID imagenId) {
+        ProductoImagen imagen = imagenes.findByIdAndProducto_Id(imagenId, productoId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No se encontró esa imagen para el producto."));
+
+        storage.eliminar(imagen.getRutaStorage());
+
+        boolean eraPrincipal = imagen.isPrincipal();
+        imagenes.delete(imagen);
+
+        List<ProductoImagen> restantes =
+                imagenes.findByProducto_IdOrderByOrdenAsc(productoId);
+
+        for (int i = 0; i < restantes.size(); i++) {
+            ProductoImagen restante = restantes.get(i);
+            restante.cambiarOrden((short) i);
+
+            if (i == 0) {
+                restante.marcarPrincipal();
+            } else if (restante.isPrincipal()) {
+                restante.quitarPrincipal();
+            }
+        }
+
+        imagenes.saveAll(restantes);
     }
 
     public void desactivar(UUID id) {

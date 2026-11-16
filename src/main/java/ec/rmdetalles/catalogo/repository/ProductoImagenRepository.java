@@ -4,6 +4,7 @@ import ec.rmdetalles.catalogo.domain.ProductoImagen;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductoImagenRepository
@@ -14,4 +15,6 @@ public interface ProductoImagenRepository
     long countByProducto_Id(UUID productoId);
 
     boolean existsByProducto_IdAndPrincipalTrue(UUID productoId);
+
+    Optional<ProductoImagen> findByIdAndProducto_Id(UUID imagenId, UUID productoId);
 }

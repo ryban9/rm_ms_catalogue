@@ -53,6 +53,15 @@ public class ProductoController {
         return service.subirImagen(id, archivo, textoAlternativo);
     }
 
+    @DeleteMapping("/api/v1/productos/{productoId}/imagenes/{imagenId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminarImagen(
+            @PathVariable UUID productoId,
+            @PathVariable UUID imagenId
+    ) {
+        service.eliminarImagen(productoId, imagenId);
+    }
+
     @PutMapping("/api/v1/productos/{id}")
     public ProductoResponse actualizar(@PathVariable UUID id, @Valid @RequestBody ProductoRequest request) {
         return service.actualizar(id, request);

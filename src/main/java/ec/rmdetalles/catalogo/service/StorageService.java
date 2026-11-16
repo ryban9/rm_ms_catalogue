@@ -5,6 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class StorageService {
 
@@ -33,6 +36,16 @@ public class StorageService {
                 .header("x-upsert", "false")
                 .contentType(MediaType.parseMediaType(mimeType))
                 .body(contenido)
+                .retrieve()
+                .toBodilessEntity();
+    }
+
+    public void eliminar(String ruta) {
+        restClient.method(org.springframework.http.HttpMethod.DELETE)
+                .uri("/object/{bucket}", bucket)
+                .header("apikey", secretKey)
+                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .body(Map.of("prefixes", List.of(ruta)))
                 .retrieve()
                 .toBodilessEntity();
     }

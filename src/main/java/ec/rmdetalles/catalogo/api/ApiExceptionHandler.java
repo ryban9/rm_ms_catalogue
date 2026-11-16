@@ -3,10 +3,13 @@ package ec.rmdetalles.catalogo.api;
 import ec.rmdetalles.catalogo.service.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.stream.Collectors;
@@ -34,6 +37,29 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ProblemDetail conflict(DataIntegrityViolationException ex) {
         return problem(HttpStatus.CONFLICT, "Conflicto de datos", "El registro infringe una restricción de integridad.");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    ProblemDetail uploadTooLarge(MaxUploadSizeExceededException ex) {
+        return problem(
+                HttpStatus.PAYLOAD_TOO_LARGE,
+                "Archivo demasiado grande",
+                "La imagen no puede superar 5 MB."
+        );
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    ProblemDetail responseStatus(ResponseStatusException ex) {
+        HttpStatusCode status = ex.getStatusCode();
+        String detail = ex.getReason() != null
+                ? ex.getReason()
+                : "La solicitud no se pudo completar.";
+
+        return problem(
+                HttpStatus.valueOf(status.value()),
+                "Solicitud no válida",
+                detail
+        );
     }
 
     private ProblemDetail problem(HttpStatus status, String title, String detail) {

@@ -65,5 +65,8 @@ public class ProductoImagen {
     public String getTextoAlternativo() { return textoAlternativo; }
     public short getOrden() { return orden; }
     public boolean isPrincipal() { return principal; }
+    public void marcarPrincipal() { this.principal = true; }
+    public void quitarPrincipal() { this.principal = false; }
+    public void cambiarOrden(short orden) { this.orden = orden; }
     public OffsetDateTime getCreadoEn() { return creadoEn; }
 }

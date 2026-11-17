@@ -10,11 +10,13 @@ import java.util.UUID;
 public interface ProductoImagenRepository
         extends JpaRepository<ProductoImagen, UUID> {
 
-    List<ProductoImagen> findByProducto_IdOrderByOrdenAsc(UUID productoId);
+    List<ProductoImagen> findByProducto_IdAndNegocio_IdOrderByOrdenAsc(
+            UUID productoId, UUID negocioId);
 
-    long countByProducto_Id(UUID productoId);
+    long countByProducto_IdAndNegocio_Id(UUID productoId, UUID negocioId);
 
-    boolean existsByProducto_IdAndPrincipalTrue(UUID productoId);
+    boolean existsByProducto_IdAndNegocio_IdAndPrincipalTrue(UUID productoId, UUID negocioId);
 
-    Optional<ProductoImagen> findByIdAndProducto_Id(UUID imagenId, UUID productoId);
+    Optional<ProductoImagen> findByIdAndProducto_IdAndNegocio_Id(
+            UUID imagenId, UUID productoId, UUID negocioId);
 }

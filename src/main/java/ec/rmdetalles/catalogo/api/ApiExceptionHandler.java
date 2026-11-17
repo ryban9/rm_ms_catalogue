@@ -44,7 +44,7 @@ public class ApiExceptionHandler {
         return problem(
                 HttpStatus.PAYLOAD_TOO_LARGE,
                 "Archivo demasiado grande",
-                "La imagen no puede superar 5 MB."
+                "El archivo supera el límite técnico de 10 MB del servicio."
         );
     }
 

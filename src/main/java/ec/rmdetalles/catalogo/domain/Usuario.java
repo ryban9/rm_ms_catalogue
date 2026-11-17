@@ -11,13 +11,10 @@ import java.util.UUID;
 @Table(name = "usuarios", schema = "rm_detalles")
 public class Usuario {
     @Id
-    private UUID id; // UUID de auth.users (claim sub del JWT)
+    private UUID id; // UUID de auth.users, claim sub del JWT
 
     @Column(nullable = false, length = 120)
     private String nombre;
-
-    @Column(nullable = false, length = 20)
-    private String rol;
 
     @Column(nullable = false)
     private boolean activo;
@@ -26,6 +23,5 @@ public class Usuario {
 
     public UUID getId() { return id; }
     public String getNombre() { return nombre; }
-    public String getRol() { return rol; }
     public boolean isActivo() { return activo; }
 }

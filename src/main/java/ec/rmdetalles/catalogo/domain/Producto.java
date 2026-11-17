@@ -23,11 +23,15 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "negocio_id", nullable = false, updatable = false)
+    private Negocio negocio;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(nullable = false, length = 50)
     private String codigo;
 
     @Column(nullable = false, length = 160)
@@ -61,9 +65,10 @@ public class Producto {
 
     protected Producto() { }
 
-    public Producto(Categoria categoria, String codigo, String nombre, String descripcion,
+    public Producto(Negocio negocio, Categoria categoria, String codigo, String nombre, String descripcion,
                     BigDecimal precioReferencial, boolean publicado,
                     boolean personalizable, boolean controlaStock) {
+        this.negocio = negocio;
         this.categoria = categoria;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -76,6 +81,7 @@ public class Producto {
     }
 
     public UUID getId() { return id; }
+    public Negocio getNegocio() { return negocio; }
     public Categoria getCategoria() { return categoria; }
     public String getCodigo() { return codigo; }
     public String getNombre() { return nombre; }

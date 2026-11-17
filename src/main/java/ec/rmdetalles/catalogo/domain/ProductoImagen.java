@@ -26,10 +26,14 @@ public class ProductoImagen {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "negocio_id", nullable = false, updatable = false)
+    private Negocio negocio;
+
     @Column(name = "ruta_archivo", nullable = false, columnDefinition = "text")
     private String rutaStorage;
 
-    @Column(name = "texto_alternativo", length = 150)
+    @Column(name = "texto_alternativo", length = 180)
     private String textoAlternativo;
 
     @Column(nullable = false)
@@ -53,6 +57,7 @@ public class ProductoImagen {
             boolean principal
     ) {
         this.producto = producto;
+        this.negocio = producto.getNegocio();
         this.rutaStorage = rutaStorage;
         this.textoAlternativo = textoAlternativo;
         this.orden = orden;
